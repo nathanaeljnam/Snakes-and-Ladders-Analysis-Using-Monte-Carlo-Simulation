@@ -33,6 +33,19 @@ Since a player's wins or losses in this game are purely determined by the dice r
 
 ### Creating the Game
 
+We will create our game in Python. First, we have to download a couple of packages. Numpy will be used for the game creation and Monte Carlo simulation. Pandas will be used to store the data that our simulations produce.
+
+```Python
+#Importing Packages
+import random
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+```
+
+We create the dice for the game. Since the game relies on a single dice, we will create a function that chooses a random int between 1 and 6 to simulate our dice.
+
 ```Python
 #Creates a fair dice roller
 
@@ -43,6 +56,9 @@ def roll_dice():
     """
     return random.randint(1,6)
 ```
+
+IMG of the game board to reference where the ladders are
+
 ```Python
 #Creates a single game simulation
 #9 ladders, 10 snakes
