@@ -26,6 +26,11 @@ IMG
 The game can be played with one or more players. Each player will roll a single die to determine how many squares the player moves. If a player lands on a snake, they must slide down the snake to the respective square it connects to. If a player lands on a ladder, the ladder will be taken upwards to the connecting square. The goal of the games is to reach the final square at the end of the board before the other players. 
 
 ### Methodology
+From Wikipedia: "Monte Carlo methods, or Monte Carlo experiments, are a broad class of computational algorithms that rely on repeated random sampling to obtain numerical results. The underlying concept is to use randomness to solve problems that might be deterministic in principle."
+
+Since a player's wins or losses in this game are purely determined by the dice rolls rather than any type of human decision-making, skill, or strategy, we can use this randomness to get an idea of how the game works. The random dice rolls and the unpredictable impact of the snakes and ladders make it challenging to get any insights analytically. By running a Monte Carlo simulation, we can model thousands of simulated game playthroughs, which allows us to draw insights into the data. 
+
+
 ### Creating the Game
 ### Monte Carlo Simulation
 ### Analysis
