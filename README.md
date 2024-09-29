@@ -32,6 +32,87 @@ Since a player's wins or losses in this game are purely determined by the dice r
 
 
 ### Creating the Game
+
+'''
+#Creates a fair dice roller
+
+def roll_dice():
+    """
+    Simulates a fair dice roll with
+    Returns: Integer from 1 to 6
+    """
+    return random.randint(1,6)
+'''
+'''
+#Creates a single game simulation
+#9 ladders, 10 snakes
+#Ladders on 1,4,9,21,28,36,51,71,80 (non-indexing)
+#Snakes on 16, 47, 49, 56, 62, 64, 87, 93, 95, 98 (non-indexing)
+
+def play_game_board():
+    
+    """
+    Simulates a game of snakes and ladders
+    Returns: player_position, turns, chutes_hit, ladders_hit, tracking_board_before, tracking_board_after
+    """
+    
+    game_board = [37, 0, 0, 10, 0, 0, 0, 0, 22, 0,
+                  0, 0, 0, 0, 0, -10, 0, 0, 0, 0,
+                  21, 0, 0, 0, 0, 0, 0, 56, 0, 0,
+                  0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 
+                  0, 0, 0, 0, 0, 0, -21, 0, -38, 0,
+                  16, 0, 0, 0, 0, -3, 0, 0, 0, 0,
+                  0, -43, 0, -4, 0, 0, 0, 0, 0, 0,
+                  20, 0, 0, 0, 0, 0, 0 , 0, 0, 20,
+                  0, 0, 0, 0, 0, 0, -63, 0, 0, 0,
+                  0, 0, -20, 0 ,-20, 0, 0, -20, 0, 0]
+    
+    tracking_board_before = np.zeros(100)
+    tracking_board_after = np.zeros(100)
+    
+    #Player position starts on -1 because it is on the 0th square on an actual board 
+    #but since we are using Python indexing it still be -1
+    player_position = -1
+    turns = 0 
+    chutes_hit = 0
+    ladders_hit = 0
+
+    while player_position < 99:
+        #Moving the player after rolling the dice
+        player_position += roll_dice()
+        
+        # Ensure player_position stays within bounds
+        player_position = min(player_position, 99)
+        
+        
+        #Creating a counter for each square on the board before chutes and ladders
+        tracking_board_before[player_position] += 1
+
+        #Counting the total number of chutes and ladders hit per game
+        if game_board[player_position] > 0:
+            ladders_hit += 1
+        if game_board[player_position] < 0:
+            chutes_hit += 1
+        
+        #Moving the player through any potential chutes and ladders
+        player_position += game_board[player_position]
+        
+        #Creating counter for each square after chutes and ladders
+        tracking_board_after[player_position] +=1 
+        
+        turns += 1
+    
+    tracking_board_before[-1] = 1
+    tracking_board_after[-1] = 1
+    
+
+    return player_position, turns, chutes_hit, ladders_hit, tracking_board_before, tracking_board_after
+
+    
+
+'''
+
+
 ### Monte Carlo Simulation
 ### Analysis
 ### Markov Matrix Approach
