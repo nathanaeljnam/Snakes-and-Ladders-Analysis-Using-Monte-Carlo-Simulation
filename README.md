@@ -33,7 +33,7 @@ Since a player's wins or losses in this game are purely determined by the dice r
 
 ### Creating the Game
 
-'''
+```Python
 #Creates a fair dice roller
 
 def roll_dice():
@@ -42,8 +42,8 @@ def roll_dice():
     Returns: Integer from 1 to 6
     """
     return random.randint(1,6)
-'''
-'''
+```
+```Python
 #Creates a single game simulation
 #9 ladders, 10 snakes
 #Ladders on 1,4,9,21,28,36,51,71,80 (non-indexing)
@@ -107,10 +107,7 @@ def play_game_board():
     
 
     return player_position, turns, chutes_hit, ladders_hit, tracking_board_before, tracking_board_after
-
-    
-
-'''
+```
 
 
 ### Monte Carlo Simulation
