@@ -125,6 +125,26 @@ def play_game_board():
     return player_position, turns, chutes_hit, ladders_hit, tracking_board_before, tracking_board_after
 ```
 
+```
+turns	chutes_hit	ladders_hit
+0	47	6	5
+1	53	7	4
+2	15	1	4
+3	11	1	2
+4	34	4	6
+...	...	...	...
+99995	49	7	2
+99996	12	0	1
+99997	14	0	3
+99998	57	6	4
+99999	67	8	3
+100000 rows × 3 columns
+```
+
+
+
+
+
 
 ### Monte Carlo Simulation
 ### Analysis
