@@ -59,6 +59,12 @@ def roll_dice():
 
 IMG of the game board to reference where the ladders are
 
+Reference the above image for the positions of snakes and ladders on the board.
+
+We will now create an actual playthrough of a game defined as a function. We must first create a virtual board to be played on. Since the game only has one pathway to take (other than the snakes and ladders), we will use a list of length 100 (10 x 10 dimensions) to simulate the board. The index will represent the position of the player on the board, and the value at each index of the list will represent where the snakes and ladders are located and where they connect. Spaces on the board without snakes or ladders will be represented by an integer value of 0 because we do not want to change the index (player position). Spaces on the board with a snake will be represented by a negative value. Now, the magnitude of this value determines how many squares backward they will need to go (where the snake respectively connects). Spaces on the board with a ladder will be represented by a positive value. This will determine how many squares forward they must go (where the ladder connects).
+
+
+
 ```Python
 #Creates a single game simulation
 #9 ladders, 10 snakes
@@ -87,7 +93,7 @@ def play_game_board():
     tracking_board_after = np.zeros(100)
     
     #Player position starts on -1 because it is on the 0th square on an actual board 
-    #but since we are using Python indexing it still be -1
+    #but since we are using Python indexing, it still is -1
     player_position = -1
     turns = 0 
     chutes_hit = 0
@@ -125,21 +131,7 @@ def play_game_board():
     return player_position, turns, chutes_hit, ladders_hit, tracking_board_before, tracking_board_after
 ```
 
-```
-turns	chutes_hit	ladders_hit
-0	47	6	5
-1	53	7	4
-2	15	1	4
-3	11	1	2
-4	34	4	6
-...	...	...	...
-99995	49	7	2
-99996	12	0	1
-99997	14	0	3
-99998	57	6	4
-99999	67	8	3
-100000 rows × 3 columns
-```
+
 
 
 
