@@ -57,19 +57,14 @@ def roll_dice():
     return random.randint(1,6)
 ```
 
+
+We will now create an actual playthrough of a game defined as a function. We must first create a virtual board to be played on. Since the game only has one pathway to take (other than the snakes and ladders), we will use a list of length 100 (10 x 10 dimensions) to simulate the board. The index will represent the position of the player on the board, and the value at each index of the list will represent where the snakes and ladders are located and where they connect. Spaces on the board without snakes or ladders will be represented by an integer value of 0 because we do not want to change the index (player position). Spaces on the board with a snake will be represented by a negative value. Now, the magnitude of this value determines how many squares backward they will need to go (where the snake respectively connects). A positive value will represent spaces on the board with a ladder. This will determine how many squares forward they must go (where the ladder connects). These values are all determined by the location of snakes and ladders, as shown in the gameboard image below. For example, the first square of the board connects to square 38. In our list, the first value of the list is 37 (at index 0), which leads to square 38 (at index 37). Keep in mind Python indexing starts at 0.
+
 IMG of the game board to reference where the ladders are
 
-Reference the above image for the positions of snakes and ladders on the board.
+There are a few more variables we define as well that assist in our analysis. We create two np arrays of length 100, all filled with zeros. These are to track the player's positions on the board after each dice roll, both before and after taking the snakes and ladders. We also track the number of turns a game takes, the number of snakes hit, and the number of ladders hit. Finally, we create a player position variable that starts at index -1, which does not exist, which ensures the player starts off the board. 
 
-We will now create an actual playthrough of a game defined as a function. We must first create a virtual board to be played on. Since the game only has one pathway to take (other than the snakes and ladders), we will use a list of length 100 (10 x 10 dimensions) to simulate the board. The index will represent the position of the player on the board, and the value at each index of the list will represent where the snakes and ladders are located and where they connect. Spaces on the board without snakes or ladders will be represented by an integer value of 0 because we do not want to change the index (player position). Spaces on the board with a snake will be represented by a negative value. Now, the magnitude of this value determines how many squares backward they will need to go (where the snake respectively connects). Spaces on the board with a ladder will be represented by a positive value. This will determine how many squares forward they must go (where the ladder connects). These values are all determined by the location of snakes and ladders, as shown in the image of the gameboard above. For example, the first square of the board connects to square 38. In our list, the first value of the list is 37 (at index 0), which leads to square 38 (at index 37). Keep in mind Python indexing starts at 0.
-
-
-
-There are a few more variables we define as well that assist in our analysis. We create two np arrays of length 100, all filled with zeros. These are to track the player's positions after each dice roll, both before and after taking the snakes and ladders. We also
-
-
-
-
+We now have the components ready to start the game; we can initialize a while loop that continues unless the player reaches the final square (index 99). We roll a dice and add that amount to the player's position to move the player across the board. Then, we track any of the variables defined before, depending on where the player lands. Additionally, if a player hits a position on the game board that contains a snake or ladder, we move the player up or down according to the snake and ladder respectively. At the end, we return our variables.
 
 
 ```Python
@@ -137,11 +132,6 @@ def play_game_board():
 
     return player_position, turns, chutes_hit, ladders_hit, tracking_board_before, tracking_board_after
 ```
-
-
-
-
-
 
 
 
