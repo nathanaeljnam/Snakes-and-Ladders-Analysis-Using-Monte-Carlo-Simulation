@@ -179,6 +179,31 @@ The resulting data frame looks something like this:
 ### Analysis
 Now that we have data from our Monte Carlo simulation, we can begin some analysis.
 
+We can first take a look at the number of rolls it takes for a game to be completed. Since we have a lot of simulated data, we can show this data on a distribution built in matplotlib, as shown in the graph. We can also use our simulated data to calculate average turns per game's mean, median, and mode. 
+
+```Python
+plt.figure(figsize=(14, 8))
+plt.hist(results_df['turns'], bins = range(0, 250, 5), density = True, rwidth= 0.8, color = 'cornflowerblue')
+plt.xlabel('Number of Rolls', fontsize = 15)
+plt.ylabel('Probability', fontsize = 15)
+plt.title('Probability Distribution of Number of Rolls to Win', fontsize = 25)
+plt.xticks(range(0,250,10), fontsize = 12)
+plt.axvline(results_df['turns'].median(), color='blue', linestyle = "dashed", linewidth=2, label = f"Median: {results_df['turns'].median()}")
+plt.axvline(results_df['turns'].mean(), color='red', linestyle = "dashed", linewidth=2, label = f"Mean: {results_df['turns'].mean()}")
+plt.axvline(results_df['turns'].mode()[0], color='black', linestyle = "dashed", linewidth=2, label = f"Mode: {results_df['turns'].mode()[0]}")
+plt.legend()
+plt.grid()
+plt.show()
+```
+
+Output Image 1
+
+
+
+
+
+
+
 
 
 ### Markov Matrix Approach
