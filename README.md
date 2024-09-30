@@ -136,6 +136,38 @@ def play_game_board():
 
 
 ### Monte Carlo Simulation
+
+Now that we have built a playthrough of a game, we can begin our Monte Carlo simulation. As mentioned before, the simplistic nature of Snakes and Ladders and its reliance on randomness makes it a good subject to simulate. For our purposes, we will simulate 100,000 game playthroughs. We simulate more or less depending on how precise we want our results to be. For our analysis, 100,000 will suffice.
+
+To write this up, we create a data frame using pandas to store our data collected from each individual game. And then we simply simulate the game 100,000 times, each time we store the data into our data frame until all simulations are complete.
+
+```Python
+# We will do 100,000 simulations
+n = 100000
+
+random.seed(0)
+# Create an empty DataFrame to store the results
+results_df = pd.DataFrame(columns=["turns", "chutes_hit", "ladders_hit"])
+
+
+#Create empty board for the player positions
+heatmap_board = np.zeros(100)
+#Create empty board for player positions after hitting the snakes and ladders 
+heatmap_board_after = np.zeros(100)
+# Repeat the simulation 'n' times and store the results in the DataFrame
+for i in range(n):
+    
+    final_position, turns, chutes_hit, ladders_hit, tracking_board_before, tracking_board_after = play_game_board()
+    
+    
+    new_row = pd.Series({'turns': turns, 'chutes_hit': chutes_hit, 'ladders_hit': ladders_hit})
+    results_df = pd.concat([results_df, pd.DataFrame([new_row])], ignore_index=True)
+    
+    
+    heatmap_board += tracking_board_before
+    heatmap_board_after += tracking_board_after
+    
+```
 ### Analysis
 ### Markov Matrix Approach
 ### Multiple Player Game
