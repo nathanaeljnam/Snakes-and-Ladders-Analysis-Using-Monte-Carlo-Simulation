@@ -171,6 +171,7 @@ for i in range(n):
 The resulting data frame looks something like this:
 
 | | turns | chutes_hit |ladders_hit|
+| ------------- | ------------- | ------------- | ------------- |
 |0| 47 | 6 | 5 |
 |1| 53 | 7 | 4 |
 |2| 15| 1 | 4 |
