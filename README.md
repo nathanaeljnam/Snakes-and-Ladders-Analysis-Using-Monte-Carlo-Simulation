@@ -176,7 +176,6 @@ The resulting data frame looks something like this:
 |1| 53 | 7 | 4 |
 |2| 15| 1 | 4 |
 
-
 ### Analysis
 ### Markov Matrix Approach
 ### Multiple Player Game
