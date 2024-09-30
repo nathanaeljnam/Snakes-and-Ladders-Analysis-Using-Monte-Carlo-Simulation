@@ -177,5 +177,9 @@ The resulting data frame looks something like this:
 |2| 15| 1 | 4 |
 
 ### Analysis
+Now that we have data from our Monte Carlo simulation, we can begin some analysis.
+
+
+
 ### Markov Matrix Approach
 ### Multiple Player Game
