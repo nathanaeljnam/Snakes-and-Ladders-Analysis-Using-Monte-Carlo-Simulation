@@ -1,27 +1,27 @@
 # Snakes and Ladders Analysis Using Monte Carlo Simulation
 
+![Intro_picture](https://github.com/user-attachments/assets/d04750c4-15dd-4d59-8080-0d1ad9d7306a)
 
 ## Table of Contents
 
-1. Introduction
-2. Snakes and Ladders Explanation
-3. Methodology
-4. Creating the Game
-5. Monte Carlo Simulation
-6. Analysis
-7. Markov Matrix Approach
-8. Multiple Player Game
+1. [Introduction and Motivation](#introduction-and-motivation)
+2. [Snakes and Ladders Explanation](#snakes-and-Ladders-explanation)
+3. [Methodology](#methodology)
+4. [Creating the Game](#creating-the-game)
+5. [Monte Carlo Simulation](#monte-carlo-simulation)
+6. [Analysis](#analysis)
+7. [Markov Matrix Approach](#markov-matrix-approach)
+8. [Multiple Player Game](#multiple-player-game)
 
-IMG
 
 ### Introduction and Motivation
 This project analyzes the game Snakes and Ladders, which originates all the way back to ancient India in the 2nd century CE. 
-Now, my motivation for this project was inspired by a heated game of Monopoly between my friends and me that lasted nearly five hours. During this five-hour span, I noticed a couple of things. One being the fact that the game never ended no matter how many times we rolled the dice. And the second, more interestingly, was the fact that I felt that we were always landing on the same few squares and narrowly dodging others. This made me wonder if there is a statistical reasoning for this. Monopoly is an extremely complicated game with many variables like Chance cards, Jail squares, and repeated turns on doubles. Snakes and Ladders, on the other hand, is far simpler, which allows for some cool analysis that we can do.
+Now, my motivation for this project was inspired by a heated game of Monopoly between my friends and me that lasted nearly five hours. During this five-hour span, I noticed a couple of things. One being the fact that the game never ended no matter how many times we rolled the dice. And the second, more interestingly, was the fact that I felt that we were always landing on the same few squares and narrowly dodging others. This made me wonder if there is a statistical reason for this. Monopoly is an extremely complicated game with many variables like Chance cards, Jail squares, and repeated turns on doubles. Snakes and Ladders, on the other hand, is far simpler, which allows for some cool analysis that we can do.
 
 ### Snakes and Ladders Explanation
 Snakes and Ladders is a rather simple game by nature. The game consists of a game board. The dimensions of the board vary, but most commonly, it is 10 x 10. On the board, there are various snakes and ladders starting and ending on two different squares. 
 
-IMG
+![snake_ladder_direction](https://github.com/user-attachments/assets/e4271eab-eacb-4295-a1fb-0acfc3f41513)
 
 The game can be played with one or more players. Each player will roll a single die to determine how many squares the player moves. If a player lands on a snake, they must slide down the snake to the respective square it connects to. If a player lands on a ladder, the ladder will be taken upwards to the connecting square. The goal of the games is to reach the final square at the end of the board before the other players. 
 
@@ -56,15 +56,13 @@ def roll_dice():
     """
     return random.randint(1,6)
 ```
-
+![snake_game_board](https://github.com/user-attachments/assets/8c4b7591-8692-4f64-a53a-943cf1579cc4)
 
 We will now create an actual playthrough of a game defined as a function. We must first create a virtual board to be played on. Since the game only has one pathway to take (other than the snakes and ladders), we will use a list of length 100 (10 x 10 dimensions) to simulate the board. The index will represent the player's position on the board, and the value at each index of the list will represent where the snakes and ladders are located and where they connect. Spaces on the board without snakes or ladders will be represented by an integer value of 0 because we do not want to change the index (player position). A negative value will represent spaces on the board with a snake. Now, the magnitude of this value determines how many squares backward they will need to go (where the snake respectively connects). A positive value will represent spaces on the board with a ladder. This will determine how many squares forward they must go (where the ladder connects). These values are all determined by the location of snakes and ladders, as shown in the gameboard image below. For example, the first square of the board connects to square 38. In our list, the first value of the list is 37 (at index 0), which leads to square 38 (at index 37). Keep in mind Python indexing starts at 0.
 
-IMG of the game board to reference where the ladders are
-
 There are a few more variables we define as well that assist in our analysis. We create two np arrays of length 100, all filled with zeros. These are to track the player's positions on the board after each dice roll, both before and after taking the snakes and ladders. We also track the number of turns a game takes, the number of snakes hit, and the number of ladders hit. Finally, we create a player position variable that starts at index -1, which does not exist, which ensures the player starts off the board. 
 
-We now have the components ready to start the game; we can initialize a while loop that continues unless the player reaches the final square (index 99). We roll a dice and add that amount to the player's position to move the player across the board. Then, we track any of the variables defined before, depending on where the player lands. Additionally, if a player hits a position on the game board that contains a snake or ladder, we move the player up or down according to the snake and ladder respectively. At the end, we return our variables.
+We now have the components ready to start the game; we can initialize a while loop that continues unless the player reaches the final square (index 99). We roll a dice and add that amount to the player's position to move the player across the board. Then, we track any of the variables defined before, depending on where the player lands. Additionally, if a player hits a position on the game board that contains a snake or ladder, we move the player up or down according to the snake and ladder, respectively. At the end, we return our variables.
 
 
 ```Python
