@@ -265,6 +265,7 @@ blue_patch = patches.Patch(color='lime', label='Ladders')
 plt.legend(handles=[red_patch, blue_patch], loc = (-0.15, 0.9))
 plt.show()
 ```
+Heatmap             |  Game Board
 :-------------------------:|:-------------------------:
 ![2](https://github.com/user-attachments/assets/bd89963a-a656-4cff-b54e-8c54d9908831)  |  ![snake_game_board](https://github.com/user-attachments/assets/8c4b7591-8692-4f64-a53a-943cf1579cc4)
 
