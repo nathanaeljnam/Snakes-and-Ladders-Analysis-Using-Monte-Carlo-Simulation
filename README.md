@@ -302,7 +302,7 @@ Average snakes hit per game: 3.94948\
 Median ladders hit per game: 3.0\
 Median snakes hit per game: 3.0\
 Mode ladders hit per game: 3\
-Mode snakes hit per game: 1\
+Mode snakes hit per game: 1
 
 On average, more snakes are hit than ladders, and the distribution of the snakes/ladders hit follows the distribution of the number of rolls to finish a game. This makes sense because the games that take a long time are typically due to the unfortunate event where a player keeps landing on snakes, not ladders.
 
@@ -366,7 +366,106 @@ plt.show()
 
 ![4](https://github.com/user-attachments/assets/b7372a5f-e977-4063-aa42-105dc4c3cb0e)
 
+We can see our Markov approach follows our Monte Carlo simulation approach quite closely. 
 
+There are a lot of other cool things that we can do with the probabilities from a Markov matrix but we will not go into detail for the sake of length.
 
 
 ### Multiple Player Game
+Both our Monte Carlo simulation and the Markov matrix approach were under the assumption that only one player was playing. But of course, this is not the case in real life because nobody likes to play board games alone! Using the same core ideas, we can simulate the game for two or more players by adding a few variables. 
+
+```Python
+## situation with 2 players
+
+def two_player_game():
+    
+    """
+    Simulates a game of snakes and ladders for 2 players
+    Returns: player_position1, player_position2 turns
+    """
+    
+    game_board = [37, 0, 0, 10, 0, 0, 0, 0, 22, 0,
+                  0, 0, 0, 0, 0, -10, 0, 0, 0, 0,
+                  21, 0, 0, 0, 0, 0, 0, 56, 0, 0,
+                  0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 
+                  0, 0, 0, 0, 0, 0, -21, 0, -38, 0,
+                  16, 0, 0, 0, 0, -3, 0, 0, 0, 0,
+                  0, -43, 0, -4, 0, 0, 0, 0, 0, 0,
+                  20, 0, 0, 0, 0, 0, 0 , 0, 0, 20,
+                  0, 0, 0, 0, 0, 0, -63, 0, 0, 0,
+                  0, 0, -20, 0 ,-20, 0, 0, -20, 0, 0]
+
+    player_position1 = -1
+    player_position2 = -1
+
+    turns = 0 
+
+
+    while player_position1 < 99 and player_position2 < 99:
+        #Moving the player after rolling the dice
+        player_position1 += roll_dice()
+        
+        # Ensure player_position stays within bounds
+        player_position1 = min(player_position1, 99)
+        player_position1 += game_board[player_position1]
+        
+        
+        player_position2 += roll_dice()
+        player_position2 = min(player_position2, 99)
+        player_position2 += game_board[player_position2]
+        
+        turns += 1
+
+
+    return player_position1, player_position2, turns
+```
+
+```Python
+# We will do 10,000 simulations
+n = 10000
+
+# Create an empty DataFrame to store the results
+results_df2 = pd.DataFrame(columns=['turns','player_position1','player_position2'])
+
+
+for i in range(n):
+    
+    player_position1, player_position2, turns = two_player_game()
+    
+    
+    new_row2 = pd.Series({'turns': turns, 'player_position1': player_position1, 'player_position2': player_position2})
+    results_df2 = pd.concat([results_df2, pd.DataFrame([new_row2])], ignore_index=True)
+```
+
+Our results_df2 data frame will look something like this:
+| | turns | player_position1 |player_position2 |
+|--|--|--|--|
+|0| 22 | 96 | 99 |
+|1| 17 | 52 | 99 |
+|2| 15| 45 | 99 |
+
+
+We can plot the distribution of the 2 player game:
+
+```Python
+plt.figure(figsize=(14, 8))
+plt.hist(results_df3['turns'], bins = range(0, 160, 5), rwidth= 0.8, color = 'cornflowerblue')
+plt.xlabel('Number of Rolls', fontsize = 15)
+plt.ylabel('Frequency', fontsize = 15)
+plt.title('Distribution of Number of Rolls to Win With 4 Players', fontsize = 25)
+plt.xticks(range(0,160,10), fontsize = 12)
+plt.axvline(results_df3['turns'].median(), color='blue', linestyle = "dashed", linewidth=2, label = f"Median: {results_df3['turns'].median()}")
+plt.axvline(results_df3['turns'].mean(), color='red', linestyle = "dashed", linewidth=2, label = f"Mean: {results_df3['turns'].mean()}")
+plt.legend()
+plt.grid()
+plt.show()
+```
+
+
+Compared to the single-player game, the distribution has less variance, and we don't get as many games that last a really long time. Logically, this makes sense since there is a higher probability that one of the players will end the game at a normal rate. 
+
+
+Four player game
+![5](https://github.com/user-attachments/assets/e64bb830-ae90-4d4e-9845-37ff0ea794cb)
+
+
