@@ -198,7 +198,7 @@ plt.show()
 ![1](https://github.com/user-attachments/assets/9cab898e-8eeb-4a0b-966f-32a4d628f93e)
 
 And we can calculate the probability of this mode to occur
-```
+```Python
 # Calculates for the probability of the mode occuring before a game
 x = results_df['turns'].mode()[0]
 prob = len(results_df[results_df['turns'] == x]) / len(results_df['turns'])
@@ -208,7 +208,7 @@ We get a probability of 0.02776
 
 Now, let's examine some more interesting behaviors. We can examine how player positions are distributed throughout the actual game board by creating a function that takes our original list of indexes and turns them into an actual game board shape. Since we had tracked player positions earlier when doing the Monte Carlo simulation, we have all the necessary data. A good way of depicting the amount players land on each square can be through a heatmap.
 
-```
+```Python
 def reshape_into_board(array):
     """
     Function that reshapes our array of player position on each square into the game board shape
@@ -221,14 +221,14 @@ def reshape_into_board(array):
     array = np.flipud(array)
     return array
 ```
-```
+```Python
 #Transforms the gameboard before going down the snakes and ladders
 heatmap_board = reshape_into_board(heatmap_board)
 #Transforms the gameboard before going down the snakes and ladders
 heatmap_board_after = reshape_into_board(heatmap_board_after)
 ```
 
-```
+```Python
 #Create a heatmap of the player position on the gameboard
 
 import matplotlib.patches as patches
@@ -274,7 +274,7 @@ plt.show()
 From the heatmap, we can see that some squares are landed on more often than others, and more importantly, some snakes and ladders are also landed on more often than others. Particularly, we can see that the snake on square 47 has the highest number of players that land on it after 100,000 simulations.
 
 We can also take a look at the distribution of snakes and ladders.
-```
+```Python
 plt.figure(figsize=(14, 8))
 x = results_df['ladders_hit']
 y = results_df['chutes_hit']
@@ -288,7 +288,7 @@ plt.show()
 ```
 ![output](https://github.com/user-attachments/assets/f2a32a60-d184-42de-b7f8-6ab7ec9609a5)
 
-```
+```Python
 print(f"Average ladders hit per game: {results_df['ladders_hit'].mean()}")
 print(f"Average chutes hit per game: {results_df['chutes_hit'].mean()}")
 print(f"Median ladders hit per game: {results_df['ladders_hit'].median()}")
@@ -297,12 +297,12 @@ print(f"Mode ladders hit per game: {results_df['ladders_hit'].mode()[0]}")
 print(f"Mode chutes hit per game: {results_df['chutes_hit'].mode()[0]}")
 ```
 
-Average ladders hit per game: 3.21554
-Average snakes hit per game: 3.94948
-Median ladders hit per game: 3.0
-Median snakes hit per game: 3.0
-Mode ladders hit per game: 3
-Mode snakes hit per game: 1
+Average ladders hit per game: 3.21554\
+Average snakes hit per game: 3.94948\
+Median ladders hit per game: 3.0\
+Median snakes hit per game: 3.0\
+Mode ladders hit per game: 3\
+Mode snakes hit per game: 1\
 
 On average, more snakes are hit than ladders, and the distribution of the snakes/ladders hit follows the distribution of the number of rolls to finish a game. This makes sense because the games that take a long time are typically due to the unfortunate event where a player keeps landing on snakes, not ladders.
 
@@ -310,7 +310,7 @@ On average, more snakes are hit than ladders, and the distribution of the snakes
 Everything mentioned so far was done using the Monte Carlo Simulation approach. But because of the nature of the game, we can also tackle the problem using Markov Matrices. A Markov process is a stochastic process where the probability of moving to a certain state only depends on the current state, not the history of how you got there. This fits well with Snakes and Ladders, where each player's next move depends solely on their current position and a die roll, without memory of past rolls. Essentially, the game is memoryless. 
 
 We can start by creating a function that creates a Markov transition matrix, which is derived from the snakes and ladders and the probability of the dice roll. 
-```
+```Python
 def markov_matrix(n):
     
     """
@@ -350,8 +350,7 @@ def markov_matrix(n):
 
 We can take our function to simulate and use the Markov matrix to compute how long it takes, on average, to reach the final square (absorbing state) from any given starting square. By repeatedly multiplying the state vector (which tracks the current position on the board) by the transition matrix, we can simulate the game and analyze probabilities of being on certain squares after a given number of moves.
 
-
-```
+```Python
 probability = [markov_matrix(i)[-1] for i in range(200)]
 plt.figure(figsize=(14, 8))
 plt.hist(results_df['turns'], bins = range(0, 250, 5), density = True, rwidth= 0.8, color = 'cornflowerblue')
