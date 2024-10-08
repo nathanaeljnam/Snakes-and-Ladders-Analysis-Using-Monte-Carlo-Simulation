@@ -196,12 +196,82 @@ plt.grid()
 plt.show()
 ```
 
-Output Image 1
+![Unable to load image](/Users/nathanaelnam/Desktop/Personal Projects/Snakes and Ladders/Images/1.png)
 
+And we can calculate the probability of this mode to occur
+```
+# Calculates for the probability of the mode occuring before a game
+x = results_df['turns'].mode()[0]
+prob = len(results_df[results_df['turns'] == x]) / len(results_df['turns'])
+print(f"Most like number of rolls is {x} with a probability of {prob}")
+```
+We get a probability of 0.02776
 
+Now, let's examine some more interesting behaviors. We can examine how player positions are distributed throughout the actual game board by creating a function that takes our original list of indexes and turns them into an actual game board shape. Since we had tracked player positions earlier when doing the Monte Carlo simulation, we have all the necessary data. A good way of depicting the amount players land on each square can be through a heatmap.
 
+```
+def reshape_into_board(array):
+    """
+    Function that reshapes our array of player position on each square into the game board shape
+    array: Numpt array of player position on each square
+    returns: An transformed array in the shape of the game board
+    """
+    
+    array = array.reshape(10,10)
+    array[1::2, :] = array[1::2, ::-1]
+    array = np.flipud(array)
+    return array
+```
+```
+#Transforms the gameboard before going down the snakes and ladders
+heatmap_board = reshape_into_board(heatmap_board)
+#Transforms the gameboard before going down the snakes and ladders
+heatmap_board_after = reshape_into_board(heatmap_board_after)
+```
 
+```
+#Create a heatmap of the player position on the gameboard
 
+import matplotlib.patches as patches
+#Ladders on 1,4,9,21,28,36,51,71,80 (non-indexing)
+#Snakes on 16, 47, 49, 56, 62, 64, 87, 93, 95, 98
+fig, ax = plt.subplots(figsize=(12,10))
+sns.heatmap(heatmap_board, cmap = "Blues", annot = True, fmt = 'g')
+
+#Patches add borders to where there are snakes and ladders
+ax.add_patch(patches.Rectangle((2, 0), 1, 1, edgecolor='red', fill=False, lw=3))
+ax.add_patch(patches.Rectangle((5, 0), 1, 1, edgecolor='red', fill=False, lw=3))
+ax.add_patch(patches.Rectangle((7, 0), 1, 1, edgecolor='red', fill=False, lw=3))
+ax.add_patch(patches.Rectangle((6, 1), 1, 1, edgecolor='red', fill=False, lw=3))
+ax.add_patch(patches.Rectangle((1, 3), 1, 1, edgecolor='red', fill=False, lw=3))
+ax.add_patch(patches.Rectangle((3, 3), 1, 1, edgecolor='red', fill=False, lw=3))
+ax.add_patch(patches.Rectangle((4, 4), 1, 1, edgecolor='red', fill=False, lw=3))
+ax.add_patch(patches.Rectangle((6, 5), 1, 1, edgecolor='red', fill=False, lw=3))
+ax.add_patch(patches.Rectangle((8, 5), 1, 1, edgecolor='red', fill=False, lw=3))
+ax.add_patch(patches.Rectangle((4, 8), 1, 1, edgecolor='red', fill=False, lw=3))
+
+ax.add_patch(patches.Rectangle((0, 9), 1, 1, edgecolor='lime', fill=False, lw=3))
+ax.add_patch(patches.Rectangle((3, 9), 1, 1, edgecolor='lime', fill=False, lw=3))
+ax.add_patch(patches.Rectangle((8, 9), 1, 1, edgecolor='lime', fill=False, lw=3))
+ax.add_patch(patches.Rectangle((0, 7), 1, 1, edgecolor='lime', fill=False, lw=3))
+ax.add_patch(patches.Rectangle((7, 7), 1, 1, edgecolor='lime', fill=False, lw=3))
+ax.add_patch(patches.Rectangle((4, 6), 1, 1, edgecolor='lime', fill=False, lw=3))
+ax.add_patch(patches.Rectangle((9, 4), 1, 1, edgecolor='lime', fill=False, lw=3))
+ax.add_patch(patches.Rectangle((0, 2), 1, 1, edgecolor='lime', fill=False, lw=3))
+ax.add_patch(patches.Rectangle((9, 2), 1, 1, edgecolor='lime', fill=False, lw=3))
+
+plt.xticks([])
+plt.yticks([])
+plt.title('Heatmap of the Board Player Positions Before Snakes and Ladders', fontsize = 20)
+red_patch = patches.Patch(color='red', label='Snakes')
+blue_patch = patches.Patch(color='lime', label='Ladders')
+plt.legend(handles=[red_patch, blue_patch], loc = (-0.15, 0.9))
+plt.show()
+```
+
+![Unable to load image](/Users/nathanaelnam/Desktop/Personal Projects/Snakes and Ladders/Images/1.png)/Users/nathanaelnam/Desktop/Personal Projects/Snakes and Ladders/Images/2.png
+
+From the heatmap, we can see that some squares are landed on more often than others, and more importantly, some snakes and ladders are also landed on more often than others. Particularly, we can see that the snake on square 47 has the highest number of players that land on it after 100,000 simulations.
 
 
 
