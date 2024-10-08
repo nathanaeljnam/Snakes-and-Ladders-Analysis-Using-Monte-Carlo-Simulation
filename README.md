@@ -58,7 +58,7 @@ def roll_dice():
 ```
 
 
-We will now create an actual playthrough of a game defined as a function. We must first create a virtual board to be played on. Since the game only has one pathway to take (other than the snakes and ladders), we will use a list of length 100 (10 x 10 dimensions) to simulate the board. The index will represent the position of the player on the board, and the value at each index of the list will represent where the snakes and ladders are located and where they connect. Spaces on the board without snakes or ladders will be represented by an integer value of 0 because we do not want to change the index (player position). Spaces on the board with a snake will be represented by a negative value. Now, the magnitude of this value determines how many squares backward they will need to go (where the snake respectively connects). A positive value will represent spaces on the board with a ladder. This will determine how many squares forward they must go (where the ladder connects). These values are all determined by the location of snakes and ladders, as shown in the gameboard image below. For example, the first square of the board connects to square 38. In our list, the first value of the list is 37 (at index 0), which leads to square 38 (at index 37). Keep in mind Python indexing starts at 0.
+We will now create an actual playthrough of a game defined as a function. We must first create a virtual board to be played on. Since the game only has one pathway to take (other than the snakes and ladders), we will use a list of length 100 (10 x 10 dimensions) to simulate the board. The index will represent the player's position on the board, and the value at each index of the list will represent where the snakes and ladders are located and where they connect. Spaces on the board without snakes or ladders will be represented by an integer value of 0 because we do not want to change the index (player position). A negative value will represent spaces on the board with a snake. Now, the magnitude of this value determines how many squares backward they will need to go (where the snake respectively connects). A positive value will represent spaces on the board with a ladder. This will determine how many squares forward they must go (where the ladder connects). These values are all determined by the location of snakes and ladders, as shown in the gameboard image below. For example, the first square of the board connects to square 38. In our list, the first value of the list is 37 (at index 0), which leads to square 38 (at index 37). Keep in mind Python indexing starts at 0.
 
 IMG of the game board to reference where the ladders are
 
@@ -206,7 +206,7 @@ print(f"Most like number of rolls is {x} with a probability of {prob}")
 ```
 We get a probability of 0.02776
 
-Now, let's examine some more interesting behaviors. We can examine how player positions are distributed throughout the actual game board by creating a function that takes our original list of indexes and turns them into an actual game board shape. Since we had tracked player positions earlier when doing the Monte Carlo simulation, we have all the necessary data. A good way of depicting the amount players land on each square can be through a heatmap.
+Now, let's examine some more interesting behaviors. We can examine how player positions are distributed throughout the game board by creating a function that takes our original list of indexes and turns them into an actual game board shape. Since we had tracked player positions earlier when doing the Monte Carlo simulation, we have all the necessary data. A heatmap can be a good way of depicting the number of players who land on each square.
 
 ```Python
 def reshape_into_board(array):
@@ -348,6 +348,7 @@ def markov_matrix(n):
     return np.linalg.matrix_power(mkv_matrix, n) @ starting_state
 ```
 
+
 We can take our function to simulate and use the Markov matrix to compute how long it takes, on average, to reach the final square (absorbing state) from any given starting square. By repeatedly multiplying the state vector (which tracks the current position on the board) by the transition matrix, we can simulate the game and analyze probabilities of being on certain squares after a given number of moves.
 
 ```Python
@@ -368,7 +369,7 @@ plt.show()
 
 We can see our Markov approach follows our Monte Carlo simulation approach quite closely. 
 
-There are a lot of other cool things that we can do with the probabilities from a Markov matrix but we will not go into detail for the sake of length.
+There are a lot of other cool things that we can do with the probabilities from a Markov matrix, but we will not go into detail for the sake of length.
 
 
 ### Multiple Player Game
@@ -419,6 +420,7 @@ def two_player_game():
 
     return player_position1, player_position2, turns
 ```
+We will run 10,000 simulations instead of our original 100,000 for the sake of time.
 
 ```Python
 # We will do 10,000 simulations
@@ -449,6 +451,109 @@ We can plot the distribution of the 2 player game:
 
 ```Python
 plt.figure(figsize=(14, 8))
+plt.hist(results_df2['turns'], bins = range(0, 160, 5), rwidth= 0.8, color = 'cornflowerblue')
+plt.xlabel('Number of Rolls', fontsize = 15)
+plt.ylabel('Frequency', fontsize = 15)
+plt.title('Distribution of Number of Rolls to Win With 2 Players', fontsize = 25)
+plt.xticks(range(0,160,10), fontsize = 12)
+plt.axvline(results_df2['turns'].median(), color='blue', linestyle = "dashed", linewidth=2, label = f"Median: {results_df2['turns'].median()}")
+plt.axvline(results_df2['turns'].mean(), color='red', linestyle = "dashed", linewidth=2, label = f"Mean: {results_df2['turns'].mean()}")
+plt.legend()
+plt.grid()
+plt.show()
+```
+![5](https://github.com/user-attachments/assets/6efcd735-a9c9-4d13-99ca-a9b8c960a00d)
+
+
+The distribution has less variance compared to the single-player game, and we don't get as many games that last a really long time. Logically, this makes sense since there is a higher probability that one of the players will end the game at a normal rate. 
+
+```Python
+We can measure the same important statistics from our single player game:
+print(f"Mean of 2 player simulation is: {results_df2['turns'].mean()}")
+print(f"Median of 2 player simulation is: {results_df2['turns'].median()}")
+print(f"Mode of 2 player simulation is: {results_df2['turns'].mode()[0]}")
+```
+
+Mean of 2 player simulation is: 23.8462\
+Median of 2 player simulation is: 21.0\
+Mode of 2 player simulation is: 18
+
+
+We can also repeat with 4 players (the more the merrier!).
+
+
+```Python
+def four_player_game():
+    
+    """
+    Simulates a game of snakes and ladders for 4 players
+    Returns: player_position1, player_position2, player_position3, player_position4, turns
+    """
+    
+    game_board = [37, 0, 0, 10, 0, 0, 0, 0, 22, 0,
+                  0, 0, 0, 0, 0, -10, 0, 0, 0, 0,
+                  21, 0, 0, 0, 0, 0, 0, 56, 0, 0,
+                  0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 
+                  0, 0, 0, 0, 0, 0, -21, 0, -38, 0,
+                  16, 0, 0, 0, 0, -3, 0, 0, 0, 0,
+                  0, -43, 0, -4, 0, 0, 0, 0, 0, 0,
+                  20, 0, 0, 0, 0, 0, 0 , 0, 0, 20,
+                  0, 0, 0, 0, 0, 0, -63, 0, 0, 0,
+                  0, 0, -20, 0 ,-20, 0, 0, -20, 0, 0]
+
+    player_position1 = -1
+    player_position2 = -1
+    player_position3 = -1
+    player_position4 = -1
+
+    turns = 0 
+
+
+    while player_position1 < 99 and player_position2 < 99 and player_position3 < 99 and player_position4 < 99:
+        #Moving the player after rolling the dice
+        player_position1 += roll_dice()
+        player_position1 = min(player_position1, 99)
+        player_position1 += game_board[player_position1]
+        
+        
+        player_position2 += roll_dice()
+        player_position2 = min(player_position2, 99)
+        player_position2 += game_board[player_position2]
+        
+        player_position3 += roll_dice()
+        player_position3 = min(player_position3, 99)
+        player_position3 += game_board[player_position3]
+        
+        player_position4 += roll_dice()
+        player_position4 = min(player_position4, 99)
+        player_position4 += game_board[player_position4]
+        
+        turns += 1
+    
+    return turns
+```
+
+
+```Python
+# We will do 10,000 simulations
+n = 10000
+
+# Create an empty DataFrame to store the results
+results_df3 = pd.DataFrame(columns=['turns'])
+
+
+for i in range(n):
+    
+    turns = four_player_game()
+    
+    
+    new_row3 = pd.Series({'turns': turns})
+    results_df3 = pd.concat([results_df3, pd.DataFrame([new_row3])], ignore_index=True)
+```
+
+
+```Python
+plt.figure(figsize=(14, 8))
 plt.hist(results_df3['turns'], bins = range(0, 160, 5), rwidth= 0.8, color = 'cornflowerblue')
 plt.xlabel('Number of Rolls', fontsize = 15)
 plt.ylabel('Frequency', fontsize = 15)
@@ -461,11 +566,7 @@ plt.grid()
 plt.show()
 ```
 
+![7](https://github.com/user-attachments/assets/12bdaca4-cd9f-418d-b1d2-40790f5c5840)
 
-Compared to the single-player game, the distribution has less variance, and we don't get as many games that last a really long time. Logically, this makes sense since there is a higher probability that one of the players will end the game at a normal rate. 
-
-
-Four player game
-![5](https://github.com/user-attachments/assets/e64bb830-ae90-4d4e-9845-37ff0ea794cb)
-
+Once again, our distribution follows the same trend; the more players we add to the game, the tighter our distribution gets and the less variation we have. Games tend to end at a quicker rate, and our measures of mean median and mode decrease.
 
