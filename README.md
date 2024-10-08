@@ -195,8 +195,7 @@ plt.legend()
 plt.grid()
 plt.show()
 ```
-
-![Unable to load image](/Users/nathanaelnam/Desktop/Personal Projects/Snakes and Ladders/Images/1.png)
+![1](https://github.com/user-attachments/assets/9cab898e-8eeb-4a0b-966f-32a4d628f93e)
 
 And we can calculate the probability of this mode to occur
 ```
@@ -268,13 +267,107 @@ blue_patch = patches.Patch(color='lime', label='Ladders')
 plt.legend(handles=[red_patch, blue_patch], loc = (-0.15, 0.9))
 plt.show()
 ```
+![2](https://github.com/user-attachments/assets/bd89963a-a656-4cff-b54e-8c54d9908831)
 
-![Unable to load image](/Users/nathanaelnam/Desktop/Personal Projects/Snakes and Ladders/Images/1.png)/Users/nathanaelnam/Desktop/Personal Projects/Snakes and Ladders/Images/2.png
+
 
 From the heatmap, we can see that some squares are landed on more often than others, and more importantly, some snakes and ladders are also landed on more often than others. Particularly, we can see that the snake on square 47 has the highest number of players that land on it after 100,000 simulations.
 
+We can also take a look at the distribution of snakes and ladders.
+```
+plt.figure(figsize=(14, 8))
+x = results_df['ladders_hit']
+y = results_df['chutes_hit']
+plt.hist([x, y], bins = range(0,25,1), label=['Ladders', 'Snakes'], color = ['cornflowerblue', 'orange'])
+plt.title('Number of Snakes and Ladders Hit', fontsize = 20)
+plt.xticks(range(0,25,1))
+plt.xlabel('Snake/Ladder Hit Per Game', fontsize = 12)
+plt.ylabel('Frequency', fontsize = 12)
+plt.legend(loc='upper right', fontsize = 12)
+plt.show()
+```
+![output](https://github.com/user-attachments/assets/f2a32a60-d184-42de-b7f8-6ab7ec9609a5)
 
+```
+print(f"Average ladders hit per game: {results_df['ladders_hit'].mean()}")
+print(f"Average chutes hit per game: {results_df['chutes_hit'].mean()}")
+print(f"Median ladders hit per game: {results_df['ladders_hit'].median()}")
+print(f"Median chutes hit per game: {results_df['chutes_hit'].median()}")
+print(f"Mode ladders hit per game: {results_df['ladders_hit'].mode()[0]}")
+print(f"Mode chutes hit per game: {results_df['chutes_hit'].mode()[0]}")
+```
 
+Average ladders hit per game: 3.21554
+Average snakes hit per game: 3.94948
+Median ladders hit per game: 3.0
+Median snakes hit per game: 3.0
+Mode ladders hit per game: 3
+Mode snakes hit per game: 1
+
+On average, more snakes are hit than ladders, and the distribution of the snakes/ladders hit follows the distribution of the number of rolls to finish a game. This makes sense because the games that take a long time are typically due to the unfortunate event where a player keeps landing on snakes, not ladders.
 
 ### Markov Matrix Approach
+Everything mentioned so far was done using the Monte Carlo Simulation approach. But because of the nature of the game, we can also tackle the problem using Markov Matrices. A Markov process is a stochastic process where the probability of moving to a certain state only depends on the current state, not the history of how you got there. This fits well with Snakes and Ladders, where each player's next move depends solely on their current position and a die roll, without memory of past rolls. Essentially, the game is memoryless. 
+
+We can start by creating a function that creates a Markov transition matrix, which is derived from the snakes and ladders and the probability of the dice roll. 
+```
+def markov_matrix(n):
+    
+    """
+    Creates a markov transition matrix for snakes and ladders
+    n: how many times you wnat the transition matrix applied (turns in a game)
+    returns: markov transition matrix applied to the starting position n times
+    """  
+    
+    board_snakes_ladders = {1:38, 4:14, 9:31, 16:6, 21:42, 28:84, 36:44,
+                  47:26, 49:11, 51:67, 56:53, 62:19, 64:60,
+                  71:91, 80:100, 87:24, 93:73, 95:75, 98:78}
+    
+    #Create a blank matrix of zeros
+    matrix = np.zeros((101,101))
+    
+    #Add probability of 1/6 for 6 states after i 
+    for i in range(101):
+        matrix[i + 1: i + 7, i] = 1 / 6
+    
+    #Ensures the probabilites add to 1 in the columns
+    matrix[range(101), range(101)] += 1 - matrix.sum(0)
+
+    #Creating a matrix for the chutes and ladders
+    jumping_matrix = np.zeros((101, 101))
+    
+    ind = [board_snakes_ladders.get(i, i) for i in range(101)]
+    jumping_matrix[ind, range(101)] = 1
+    
+    #Multiplying the two matrices to get the transition matrix
+    mkv_matrix =  jumping_matrix @ matrix
+    
+    #Starting state of a player represented as a vector
+    starting_state = [1, *np.zeros(100)]
+    
+    return np.linalg.matrix_power(mkv_matrix, n) @ starting_state
+```
+
+We can take our function to simulate and use the Markov matrix to compute how long it takes, on average, to reach the final square (absorbing state) from any given starting square. By repeatedly multiplying the state vector (which tracks the current position on the board) by the transition matrix, we can simulate the game and analyze probabilities of being on certain squares after a given number of moves.
+
+
+```
+probability = [markov_matrix(i)[-1] for i in range(200)]
+plt.figure(figsize=(14, 8))
+plt.hist(results_df['turns'], bins = range(0, 250, 5), density = True, rwidth= 0.8, color = 'cornflowerblue')
+plt.plot(np.arange(1, 200), np.diff(probability), color='black', label = 'Markov')
+plt.legend()
+plt.xlabel('Number of Rolls', fontsize = 15)
+plt.ylabel('Probability', fontsize = 15)
+plt.title('Distribution of Number of Rolls to Win', fontsize = 25)
+plt.xticks(range(0,250,10), fontsize = 12)
+plt.grid()
+plt.show()
+```
+
+![4](https://github.com/user-attachments/assets/b7372a5f-e977-4063-aa42-105dc4c3cb0e)
+
+
+
+
 ### Multiple Player Game
